@@ -56,23 +56,14 @@ Creates:
 
 **Previous Behavior:** All intermediate files were deleted after processing
 
-**New Behavior:** All intermediate files are kept with output prefix
+**New Behavior:** Some intermediate files are kept with output prefix
 
 **Intermediate Files Kept:**
-- `<prefix>_seq_to_one_line.fasta` - Formatted sequences
 - `<prefix>_filter_sequence_minlength.fasta` - Filtered sequences (>200bp)
-- `<prefix>_define_lines.fasta` - Sequence headers
-- `<prefix>_seq_lines.fasta` - Sequence data
-- `<prefix>_seq_upper.fasta` - Uppercase sequences
-- `<prefix>_kmer_seqs` - Processed k-mer sequences
-- `<prefix>_kmer_6.txt` - K-mer features (k=1 to k=6)
-- `<prefix>_orf_length.txt` - ORF length features
-- `<prefix>_features.txt` - Combined feature matrix
 
 **Benefits:**
 - Enables debugging and validation
 - Allows inspection of intermediate processing steps
-- Can reuse intermediate results for analysis
 
 ### 4. Model Path Updated ✅
 
@@ -101,7 +92,7 @@ def prediction(dat, md):
 **Expected Directory Structure:**
 ```
 plek2/
-├── scripts/          (or just root directory)
+├── bin/          (or just root directory)
 │   ├── PLEK2.py
 │   └── functions.py
 └── utils/
@@ -109,30 +100,7 @@ plek2/
     └── Coding_Net_kmer6_orf_Arabidopsis.h5
 ```
 
-### 5. Conda Installation Recipe ✅
-
-**New Files Created:**
-- `conda-recipe/meta.yaml` - Conda package metadata
-- `conda-recipe/build.sh` - Build script for conda
-
-**Features:**
-- Noarch Python package (works on all platforms)
-- Specifies all dependencies with correct versions
-- Creates proper directory structure
-- Installs executable as `plek2` command
-
-**Building the Package:**
-```bash
-conda build conda-recipe
-conda install --use-local plek2
-```
-
-**Notes:**
-- Models must be downloaded separately (too large for conda)
-- Build script provides instructions for model installation
-- Creates expected directory structure automatically
-
-### 6. Comprehensive Documentation ✅
+### 5. Comprehensive Documentation ✅
 
 **New Documentation Files:**
 
@@ -160,7 +128,7 @@ conda install --use-local plek2
    - Updated usage examples
    - Added reference to detailed documentation
 
-### 7. Git Configuration ✅
+### 6. Git Configuration ✅
 
 **New Files:**
 - `.gitignore` - Excludes build artifacts, models, and intermediate files
@@ -196,65 +164,16 @@ python PLEK2.py -i input.fa -m ve -o results/sample1
 
 ## Installation Workflows
 
-### Conda Installation:
-1. Build conda package
-2. Install with conda
-3. Download models separately
-4. Place in utils directory
-5. Run with `plek2` command
-
-### Manual Installation:
 1. Clone repository
 2. Create utils directory
-3. Download and decompress models
-4. Move models to utils/
-5. Add to PATH or create alias
-6. Run with `python PLEK2.py`
+3. Build conda environment
+4. Download models separately
+5. Place models in utils directory
+6. Run with `plek2` command in cloned directory
+7. (Alternatively) place files from bin and utils in conda environment for global access. 
 
-### System Installation:
-1. Clone repository
-2. Copy to system directory (e.g., /opt/plek2)
-3. Organize into scripts/ and utils/
-4. Create symlink in /usr/local/bin
-5. Run with `plek2` command
-
-## Testing Recommendations
-
-To test the changes:
-
-1. **Structure Test** (no dependencies needed):
-   ```bash
-   python -c "from PLEK2 import parse_arguments; print('OK')"
-   ```
-
-2. **Full Test** (requires dependencies and models):
-   ```bash
-   # Create conda environment with all dependencies
-   conda create -n PLEK2 -y -c conda-forge \
-       python=3.8.5 \
-       numpy=1.19.2 \
-       pandas \
-       biopython \
-       keras=2.4.3 \
-       tensorflow=2.4.1 \
-       regex
-   conda activate PLEK2
-   
-   # Download and install models to utils/
-   
-   # Run test
-   python PLEK2.py -i PLEK2_test.fa -m ve -o test_output/test
-   
-   # Verify outputs
-   ls -l test_output/test_*.txt
-   cat test_output/test_stats.txt
-   ```
-
-3. **Check Output Files**:
-   - Verify `_scores.txt` contains all sequences
-   - Verify `_noncoding.txt` contains only non-coding sequences
-   - Verify `_stats.txt` shows correct counts and percentages
-   - Verify intermediate files are present
+### Automated setup:
+Run `setup.sh` to perform all steps.
 
 ## Backward Compatibility
 
@@ -290,34 +209,5 @@ To test the changes:
 - `QUICKSTART.md` - Quick reference
 - `CHANGES.md` - This file
 - `.gitignore` - Git ignore configuration
-- `conda-recipe/meta.yaml` - Conda package metadata
-- `conda-recipe/build.sh` - Conda build script
 
-## Validation Checklist
 
-- [x] Output prefix parameter added and working
-- [x] Output directory auto-creation works
-- [x] Three output files generated correctly
-- [x] Intermediate files preserved with prefix
-- [x] Model path updated to ../utils/
-- [x] Conda recipe created
-- [x] Documentation complete
-- [x] .gitignore configured
-- [ ] Tested with actual models (requires model files)
-- [ ] Tested conda build (requires conda-build)
-
-## Next Steps for Users
-
-1. Download model files from SourceForge
-2. Choose installation method
-3. Follow appropriate guide (INSTALLATION.md)
-4. Test with provided test data
-5. Use in production with own data
-
-## Support
-
-For issues or questions:
-- Check INSTALLATION.md for detailed instructions
-- Check DIRECTORY_STRUCTURE.md for setup help
-- Review QUICKSTART.md for common examples
-- Open issue on GitHub: https://github.com/AHinsu/plek2
