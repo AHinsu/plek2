@@ -68,9 +68,8 @@ def filter_fasta(fa, output_prefix):
     f4.close()
     f5.close()
 
-    # Return sequence names for later use
-    return seq_names
-
+    # Nucleotides to upper case ...
+    
     file_in = open(output_prefix + "_seq_lines.fasta", 'r').readlines()
 
     f6 = open(output_prefix + "_seq_upper.fasta", 'w')
@@ -217,6 +216,18 @@ def filter_fasta(fa, output_prefix):
 
     f_new.close()
 
+    ## remove middle file
+    os.remove(output_prefix + '_replace_u')
+    os.remove(output_prefix + '_replace_R')
+    os.remove(output_prefix + '_replace_Y')
+    os.remove(output_prefix + '_replace_M')
+    os.remove(output_prefix + '_replace_K')
+    os.remove(output_prefix + '_replace_S')
+    os.remove(output_prefix + '_replace_W')
+    os.remove(output_prefix + '_replace_H')
+    os.remove(output_prefix + '_replace_B')
+    os.remove(output_prefix + '_replace_V')
+    
     return seq_names
 
 
@@ -494,7 +505,19 @@ def output_results(Y, seq_names, output_prefix):
     print(f"  - Scores: {scores_file}")
     print(f"  - Non-coding list: {noncoding_file}")
     print(f"  - Statistics: {stats_file}")
+
+
+    os.remove(output_prefix + '_define_lines.fasta')
+    os.remove(output_prefix + '_seq_upper.fasta')
+    # os.remove(output_prefix + 'filter_sequence_minlength.fasta')
+    os.remove(output_prefix + '_kmer_6.txt')#
+    os.remove(output_prefix + '_kmer_seqs')
+    os.remove(output_prefix + '_orf_length.txt')
+    os.remove(output_prefix + '_seq_lines.fasta')
+    os.remove(output_prefix + '_seq_to_one_line.fasta')
+    os.remove(output_prefix + '_features.txt')
     
     return [pred_noncoding_acc, pred_coding_acc]
+
 
 
