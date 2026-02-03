@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Model files (too large for git)
+*.h5
+*.h5.bz2
+
+# Intermediate output files
+*_seq_to_one_line.fasta
+*_filter_sequence_minlength.fasta
+*_define_lines.fasta
+*_seq_lines.fasta
+*_seq_upper.fasta
+*_replace_*
+*_kmer_seqs
+*_kmer_*.txt
+*_orf_length.txt
+*_features.txt
+
+# Output files (examples)
+*_scores.txt
+*_noncoding.txt
+*_stats.txt
+
+# OS
+.DS_Store
+Thumbs.db
