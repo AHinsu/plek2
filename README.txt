@@ -53,8 +53,7 @@ SETUP
 
 2. Extract and decompress models:
    $ tar -xzf PLEK2_model_v3.tar.gz
-   $ bunzip2 PLEK2_model_v3/Coding_Net_kmer6_orf.h5.bz2
-   $ bunzip2 PLEK2_model_v3/Coding_Net_kmer6_orf_Arabidopsis.h5.bz2
+   $ bunzip2 PLEK2_model_v3/*.bz2
    $ mv PLEK2_model_v3/*.h5 .
    $ cd ..
 

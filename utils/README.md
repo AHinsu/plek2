@@ -60,7 +60,7 @@ utils/
 You can verify with:
 
 ```bash
-ls -lh *.h5
+ls -lh *.h5 2>/dev/null || echo "No model files found"
 ```
 
 Both model files should be present and have sizes of several hundred MB each.
