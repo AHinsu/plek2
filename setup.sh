@@ -193,7 +193,7 @@ main() {
     echo ""
     echo "Or from this directory:"
     echo "  conda activate PLEK2"
-    echo "  bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test"
+    echo "  PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test"
     echo ""
     echo "Or with explicit Python interpreter:"
     echo "  python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test"
