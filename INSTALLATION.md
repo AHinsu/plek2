@@ -113,8 +113,8 @@ cp bin/functions.py $CONDA_PREFIX/bin/
 mkdir -p $CONDA_PREFIX/utils
 cp utils/*.h5 $CONDA_PREFIX/utils/
 
-# Make main script executable
-chmod +x $CONDA_PREFIX/bin/PLEK2.py
+# Scripts are already executable - verify permissions
+ls -l $CONDA_PREFIX/bin/PLEK2.py
 ```
 
 #### Step 5: Verify Installation
@@ -123,10 +123,13 @@ chmod +x $CONDA_PREFIX/bin/PLEK2.py
 # Activate the environment
 conda activate PLEK2
 
-# Test with sample data
-python $CONDA_PREFIX/bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o test_output
+# Test with sample data - direct execution
+bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o test_output
 
-# Or run from repository directory
+# Or from conda environment bin
+PLEK2.py -i test/PLEK2_test.fa -m ve -o test_output
+
+# Or with explicit Python interpreter
 python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o test_output
 ```
 
@@ -162,6 +165,9 @@ rm -rf PLEK2_model_v3 PLEK2_model_v3.tar.gz
 cd ..
 
 # Run directly from repository
+bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
+
+# Or with explicit Python interpreter
 python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
 ```
 
@@ -258,7 +264,9 @@ CONDA_ENV=$CONDA_PREFIX
 mkdir -p $CONDA_ENV/bin
 cp bin/PLEK2.py $CONDA_ENV/bin/
 cp bin/functions.py $CONDA_ENV/bin/
-chmod +x $CONDA_ENV/bin/PLEK2.py
+
+# Scripts are already executable - verify permissions
+ls -l $CONDA_ENV/bin/PLEK2.py
 
 # Copy utils directory contents  
 mkdir -p $CONDA_ENV/utils
@@ -277,10 +285,13 @@ ls -l $CONDA_ENV/utils/*.h5
 # Activate conda environment (if using conda)
 conda activate PLEK2
 
-# Run from conda environment
-python $CONDA_PREFIX/bin/PLEK2.py -i input.fasta -m ve -o output_prefix
+# Run directly from repository
+bin/PLEK2.py -i input.fasta -m ve -o output_prefix
 
-# Or run from repository directory
+# Run from conda environment
+PLEK2.py -i input.fasta -m ve -o output_prefix
+
+# Or with explicit Python interpreter
 python bin/PLEK2.py -i input.fasta -m ve -o output_prefix
 ```
 
@@ -295,14 +306,14 @@ python bin/PLEK2.py -i input.fasta -m ve -o output_prefix
 ```bash
 # Example 1: Using vertebrate model
 conda activate PLEK2
-python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/vertebrate_test
+bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/vertebrate_test
 
 # Example 2: Using plant model with output in specific directory
-python bin/PLEK2.py -i my_sequences.fa -m pl -o output/plant_analysis/sample1
+bin/PLEK2.py -i my_sequences.fa -m pl -o output/plant_analysis/sample1
 
 # Example 3: Running from conda environment bin
 conda activate PLEK2
-python $CONDA_PREFIX/bin/PLEK2.py -i input.fa -m ve -o results/test
+PLEK2.py -i input.fa -m ve -o results/test
 ```
 
 ### Output Files
@@ -409,6 +420,9 @@ mkdir -p test_results
 
 # Run test
 python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o test_results/test
+
+# Or run directly (scripts are executable)
+bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o test_results/test
 
 # Check outputs
 ls -lh test_results/test_*.txt

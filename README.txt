@@ -65,7 +65,7 @@ SETUP
 
 USAGE
 -----
-python bin/PLEK2.py -i fasta_file -m model -o output_prefix
+bin/PLEK2.py -i fasta_file -m model -o output_prefix
 
 Arguments:
   -i, --input_file   Input fasta file with sequences to be predicted (required)
@@ -74,7 +74,7 @@ Arguments:
    
 Examples:
 $ conda activate PLEK2
-$ python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test_output
+$ bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test_output
 
 This will create:
   - results/test_output_scores.txt       (sequence classifications and scores)
@@ -83,7 +83,10 @@ This will create:
   - Plus intermediate files for debugging
 
 Alternative - Run from conda environment bin:
-$ python $CONDA_PREFIX/bin/PLEK2.py -i input.fa -m ve -o output_prefix
+$ PLEK2.py -i input.fa -m ve -o output_prefix
+
+Or with explicit Python interpreter:
+$ python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test_output
 
 
 OUTPUT FILES

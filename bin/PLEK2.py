@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import numpy as np
 import pandas as pd
 from functions import filter_fasta, get_kmer, get_ORF, contact, prediction, init_data, output_results
