@@ -68,7 +68,6 @@ conda activate PLEK2
 cp bin/*.py $CONDA_PREFIX/bin/
 mkdir -p $CONDA_PREFIX/utils
 cp utils/*.h5 $CONDA_PREFIX/utils/
-chmod +x $CONDA_PREFIX/bin/PLEK2.py
 ```
 
 ## Usage
@@ -78,10 +77,13 @@ chmod +x $CONDA_PREFIX/bin/PLEK2.py
 conda activate PLEK2
 
 # Run from repository
-python bin/PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
+bin/PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
 
 # Or from conda environment bin
-python $CONDA_PREFIX/bin/PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
+PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
+
+# Or with explicit Python interpreter
+python bin/PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
 ```
 
 ### Parameters
@@ -94,13 +96,16 @@ python $CONDA_PREFIX/bin/PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
 ```bash
 # Test with sample data
 conda activate PLEK2
-python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
+bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
 
 # With custom data - vertebrate model
-python bin/PLEK2.py -i my_sequences.fa -m ve -o output/vertebrate_analysis
+bin/PLEK2.py -i my_sequences.fa -m ve -o output/vertebrate_analysis
 
 # Plant model with subdirectory output
-python bin/PLEK2.py -i plant_data.fa -m pl -o results/plants/sample1
+bin/PLEK2.py -i plant_data.fa -m pl -o results/plants/sample1
+
+# From conda environment bin
+PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
 ```
 
 ## Output Files

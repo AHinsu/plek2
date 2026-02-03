@@ -127,8 +127,8 @@ copy_to_conda_env() {
     cp bin/PLEK2.py "$CONDA_ENV_PATH/bin/"
     cp bin/functions.py "$CONDA_ENV_PATH/bin/"
     
-    # Make scripts executable
-    chmod +x "$CONDA_ENV_PATH/bin/PLEK2.py"
+    # Scripts are already executable - verify permissions
+    ls -l "$CONDA_ENV_PATH/bin/PLEK2.py"
     
     # Copy utils files (models)
     if [ -f "utils/Coding_Net_kmer6_orf.h5" ]; then
@@ -189,10 +189,13 @@ main() {
     echo ""
     echo "To use PLEK2:"
     echo "  1. Activate the environment: conda activate PLEK2"
-    echo "  2. Run PLEK2: python \$CONDA_PREFIX/bin/PLEK2.py -i input.fa -m ve -o output"
+    echo "  2. Run PLEK2 directly: PLEK2.py -i input.fa -m ve -o output"
     echo ""
     echo "Or from this directory:"
     echo "  conda activate PLEK2"
+    echo "  bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test"
+    echo ""
+    echo "Or with explicit Python interpreter:"
     echo "  python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test"
     echo ""
     echo "For more information, see INSTALLATION.md"
