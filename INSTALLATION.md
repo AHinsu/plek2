@@ -3,186 +3,268 @@
 ## Overview
 PLEK2 is a tool for predicting long non-coding RNAs (lncRNAs) and messenger RNAs (mRNAs) based on sequence intrinsic features and a Coding-Net model.
 
-## Installation Methods
+## Repository Structure
 
-### Method 1: Conda Installation (Recommended)
+```
+plek2/
+├── bin/                      # Python scripts
+│   ├── PLEK2.py             # Main script
+│   └── functions.py         # Helper functions
+├── test/                     # Test data
+│   ├── PLEK2_test.fa
+│   ├── PLEK2_test_lncrna.fa
+│   └── PLEK2_test_mrna.fa
+├── utils/                    # Model files (download separately)
+│   ├── Coding_Net_kmer6_orf.h5              # Vertebrate model
+│   ├── Coding_Net_kmer6_orf_Arabidopsis.h5  # Plant model
+│   └── README.md
+├── setup.sh                  # Automated setup script
+├── INSTALLATION.md          # This file
+└── README.txt
 
-#### Step 1: Build and Install via Conda
+```
+
+## Quick Start (Automated Setup)
+
+The easiest way to set up PLEK2 is using the provided setup script:
 
 ```bash
 # Clone the repository
 git clone https://github.com/AHinsu/plek2.git
 cd plek2
 
-# Build the conda package
-conda build conda-recipe
-
-# Install the package
-conda install --use-local plek2
+# Run automated setup
+./setup.sh
 ```
 
-#### Step 2: Download and Install Models
+This script will:
+1. Create a conda environment named "PLEK2" with all dependencies
+2. Download model files from SourceForge
+3. Copy bin/ and utils/ contents to the conda environment
 
-The model files are too large to include in the conda package and must be downloaded separately:
+## Manual Installation
+
+### Method 1: Conda Environment Setup (Recommended)
+
+#### Step 1: Create Conda Environment
 
 ```bash
+# Create conda environment named PLEK2 with Python and basic dependencies
+conda create -n PLEK2 -y \
+    python=3.8.5 \
+    numpy=1.19.2 \
+    pandas \
+    biopython
+
+# Activate the environment
+conda activate PLEK2
+
+# Install remaining dependencies via pip
+pip install keras==2.4.3
+pip install tensorflow==2.4.1
+pip install regex
+```
+
+#### Step 2: Clone Repository
+
+```bash
+git clone https://github.com/AHinsu/plek2.git
+cd plek2
+```
+
+#### Step 3: Download and Extract Models
+
+```bash
+# Navigate to utils directory
+cd utils
+
 # Download model files from SourceForge
 wget https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
+
+# Or using curl if wget is not available:
+# curl -L -o PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz/download
 
 # Extract the archive
 tar -xzf PLEK2_model_v3.tar.gz
 
-# Decompress the models
-cd PLEK2_model_v3
-bunzip2 Coding_Net_kmer6_orf.h5.bz2
-bunzip2 Coding_Net_kmer6_orf_Arabidopsis.h5.bz2
+# Decompress the model files
+bunzip2 PLEK2_model_v3/Coding_Net_kmer6_orf.h5.bz2
+bunzip2 PLEK2_model_v3/Coding_Net_kmer6_orf_Arabidopsis.h5.bz2
 
-# Find your conda installation prefix
-CONDA_PREFIX=$(conda info --base)
-INSTALL_PREFIX="$CONDA_PREFIX/envs/YOUR_ENV_NAME"  # Or just $CONDA_PREFIX if in base
+# Move model files to utils directory
+mv PLEK2_model_v3/*.h5 .
 
-# Copy models to the utils directory
-mkdir -p $INSTALL_PREFIX/share/plek2/utils
-cp Coding_Net_kmer6_orf.h5 $INSTALL_PREFIX/share/plek2/utils/
-cp Coding_Net_kmer6_orf_Arabidopsis.h5 $INSTALL_PREFIX/share/plek2/utils/
+# Clean up
+rm -rf PLEK2_model_v3 PLEK2_model_v3.tar.gz
+
+# Return to repository root
+cd ..
 ```
 
-### Method 2: Manual Installation with Symlinks
-
-#### Step 1: Clone the Repository
+#### Step 4: Copy Files to Conda Environment
 
 ```bash
-git clone https://github.com/AHinsu/plek2.git
-cd plek2
+# Get the conda environment path
+CONDA_PREFIX=$(conda info --envs | grep "^PLEK2 " | awk '{print $NF}')
+
+# Copy scripts to conda environment bin
+cp bin/PLEK2.py $CONDA_PREFIX/bin/
+cp bin/functions.py $CONDA_PREFIX/bin/
+
+# Copy models to conda environment utils
+mkdir -p $CONDA_PREFIX/utils
+cp utils/*.h5 $CONDA_PREFIX/utils/
+
+# Make main script executable
+chmod +x $CONDA_PREFIX/bin/PLEK2.py
 ```
 
-#### Step 2: Create Directory Structure
+#### Step 5: Verify Installation
 
 ```bash
-# Create a directory for installation (e.g., in your home directory)
-mkdir -p ~/plek2_install/scripts
-mkdir -p ~/plek2_install/utils
+# Activate the environment
+conda activate PLEK2
 
-# Copy scripts to the scripts directory
-cp PLEK2.py ~/plek2_install/scripts/
-cp functions.py ~/plek2_install/scripts/
+# Test with sample data
+python $CONDA_PREFIX/bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o test_output
+
+# Or run from repository directory
+python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o test_output
 ```
 
-#### Step 3: Download and Install Models
+### Method 2: Using from Repository Directory
+
+If you prefer to run PLEK2 directly from the cloned repository:
 
 ```bash
-# Download model files
-wget https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
-tar -xzf PLEK2_model_v3.tar.gz
-
-# Decompress models
-cd PLEK2_model_v3
-bunzip2 Coding_Net_kmer6_orf.h5.bz2
-bunzip2 Coding_Net_kmer6_orf_Arabidopsis.h5.bz2
-
-# Copy models to utils directory
-cp Coding_Net_kmer6_orf.h5 ~/plek2_install/utils/
-cp Coding_Net_kmer6_orf_Arabidopsis.h5 ~/plek2_install/utils/
-```
-
-#### Step 4: Create Symlinks (Optional)
-
-If you prefer to keep files in the cloned repository:
-
-```bash
-# Create scripts directory
-mkdir -p scripts
-mv PLEK2.py scripts/
-mv functions.py scripts/
-
-# Create utils directory and add models
-mkdir -p utils
-cp PLEK2_model_v3/Coding_Net_kmer6_orf.h5 utils/
-cp PLEK2_model_v3/Coding_Net_kmer6_orf_Arabidopsis.h5 utils/
-
-# Make script executable
-chmod +x scripts/PLEK2.py
-```
-
-#### Step 5: Add to PATH
-
-Add the scripts directory to your PATH:
-
-```bash
-# Add to ~/.bashrc or ~/.bash_profile
-echo 'export PATH="$HOME/plek2_install/scripts:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-
-# Or create an alias
-echo 'alias plek2="python $HOME/plek2_install/scripts/PLEK2.py"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-### Method 3: Permanent Installation (Move Files)
-
-Instead of creating symlinks, you can permanently move the files:
-
-```bash
-# Clone and setup
+# Clone the repository
 git clone https://github.com/AHinsu/plek2.git
 cd plek2
 
-# Create installation directory
-sudo mkdir -p /opt/plek2/scripts
-sudo mkdir -p /opt/plek2/utils
+# Install dependencies (if not using conda)
+pip install numpy==1.19.2 pandas keras==2.4.3 tensorflow==2.4.1 biopython regex
 
-# Move files
-sudo cp PLEK2.py /opt/plek2/scripts/
-sudo cp functions.py /opt/plek2/scripts/
-
-# Download and install models
+# Download and extract models to utils/ directory
+cd utils
 wget https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
 tar -xzf PLEK2_model_v3.tar.gz
-cd PLEK2_model_v3
-bunzip2 Coding_Net_kmer6_orf.h5.bz2
-bunzip2 Coding_Net_kmer6_orf_Arabidopsis.h5.bz2
-sudo cp Coding_Net_kmer6_orf.h5 /opt/plek2/utils/
-sudo cp Coding_Net_kmer6_orf_Arabidopsis.h5 /opt/plek2/utils/
+bunzip2 PLEK2_model_v3/*.bz2
+mv PLEK2_model_v3/*.h5 .
+rm -rf PLEK2_model_v3 PLEK2_model_v3.tar.gz
+cd ..
 
-# Create symlink in /usr/local/bin
-sudo ln -s /opt/plek2/scripts/PLEK2.py /usr/local/bin/plek2
-sudo chmod +x /opt/plek2/scripts/PLEK2.py
+# Run directly from repository
+python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
 ```
 
 ## Requirements
 
+### System Requirements
+- Linux or macOS operating system
 - Python >= 3.8
-- numpy == 1.19.2
+- At least 4GB RAM
+- ~2GB disk space for model files
+
+### Python Dependencies
+- python = 3.8.5
+- numpy = 1.19.2
 - pandas
-- keras == 2.4.3
-- tensorflow == 2.4.1
+- keras = 2.4.3
+- tensorflow = 2.4.1
 - biopython >= 1.3.2
 - regex
 
-### Installing Dependencies
+## Detailed Setup Commands
 
-If not using conda:
+### Creating Conda Environment "PLEK2"
+
+Complete command sequence to create and set up the conda environment:
 
 ```bash
-pip install numpy==1.19.2
-pip install pandas
-pip install keras==2.4.3
-pip install tensorflow==2.4.1
-pip install biopython
-pip install regex
+# 1. Create conda environment with all dependencies
+conda create -n PLEK2 -y python=3.8.5 numpy=1.19.2 pandas biopython
+
+# 2. Activate environment
+conda activate PLEK2
+
+# 3. Install pip dependencies
+pip install keras==2.4.3 tensorflow==2.4.1 regex
+
+# 4. Verify installation
+python -c "import numpy, pandas, keras, tensorflow, Bio, regex; print('All dependencies installed successfully')"
+```
+
+### Downloading Models from SourceForge
+
+```bash
+# Navigate to utils directory in repository
+cd plek2/utils
+
+# Download using wget (Linux/macOS with wget)
+wget https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
+
+# OR download using curl (macOS default)
+curl -L -o PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz/download
+
+# Extract archive
+tar -xzf PLEK2_model_v3.tar.gz
+
+# Decompress model files (they are compressed with bzip2)
+bunzip2 PLEK2_model_v3/Coding_Net_kmer6_orf.h5.bz2
+bunzip2 PLEK2_model_v3/Coding_Net_kmer6_orf_Arabidopsis.h5.bz2
+
+# Move models to utils directory
+mv PLEK2_model_v3/*.h5 .
+
+# Verify models are in place
+ls -lh *.h5
+
+# Clean up downloaded files
+rm -rf PLEK2_model_v3 PLEK2_model_v3.tar.gz
+```
+
+### Copying to Conda Environment
+
+After downloading models and setting up the conda environment:
+
+```bash
+# Activate PLEK2 environment
+conda activate PLEK2
+
+# Get conda environment path
+CONDA_ENV=$(conda info --envs | grep "^PLEK2 " | awk '{print $NF}')
+
+# Or use the automatic variable when environment is activated
+CONDA_ENV=$CONDA_PREFIX
+
+# Copy bin directory contents
+mkdir -p $CONDA_ENV/bin
+cp bin/PLEK2.py $CONDA_ENV/bin/
+cp bin/functions.py $CONDA_ENV/bin/
+chmod +x $CONDA_ENV/bin/PLEK2.py
+
+# Copy utils directory contents  
+mkdir -p $CONDA_ENV/utils
+cp utils/*.h5 $CONDA_ENV/utils/
+
+# Verify files are copied
+ls -l $CONDA_ENV/bin/PLEK2.py
+ls -l $CONDA_ENV/utils/*.h5
 ```
 
 ## Usage
 
+### Basic Usage
+
 ```bash
-# Basic usage
-python PLEK2.py -i input.fasta -m ve -o output_prefix
+# Activate conda environment (if using conda)
+conda activate PLEK2
 
-# With output in a specific directory
-python PLEK2.py -i input.fasta -m ve -o results/sample1
+# Run from conda environment
+python $CONDA_PREFIX/bin/PLEK2.py -i input.fasta -m ve -o output_prefix
 
-# Using plant model
-python PLEK2.py -i input.fasta -m pl -o output_prefix
+# Or run from repository directory
+python bin/PLEK2.py -i input.fasta -m ve -o output_prefix
 ```
 
 ### Parameters
@@ -191,9 +273,24 @@ python PLEK2.py -i input.fasta -m pl -o output_prefix
 - `-m, --model`: Model type - 've' for vertebrate, 'pl' for plant (required)
 - `-o, --output`: Output file prefix, can include directory names (required)
 
+### Examples
+
+```bash
+# Example 1: Using vertebrate model
+conda activate PLEK2
+python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/vertebrate_test
+
+# Example 2: Using plant model with output in specific directory
+python bin/PLEK2.py -i my_sequences.fa -m pl -o output/plant_analysis/sample1
+
+# Example 3: Running from conda environment bin
+conda activate PLEK2
+python $CONDA_PREFIX/bin/PLEK2.py -i input.fa -m ve -o results/test
+```
+
 ### Output Files
 
-PLEK2 now generates three main output files:
+PLEK2 generates three main output files:
 
 1. **`<prefix>_scores.txt`**: Contains sequence names, classification (Coding/Non-coding), and scores
 2. **`<prefix>_noncoding.txt`**: List of sequence names classified as non-coding
@@ -204,52 +301,50 @@ PLEK2 now generates three main output files:
 
 ### Intermediate Files
 
-Intermediate files are now kept with the output prefix for debugging and analysis:
+Intermediate files are kept for debugging and analysis:
 - `<prefix>_kmer_seqs`: Processed k-mer sequences
 - `<prefix>_kmer_6.txt`: K-mer features
 - `<prefix>_orf_length.txt`: ORF length features
 - `<prefix>_features.txt`: Combined features
 - And various other processing files
 
-## Example
+## Directory Structure After Installation
 
-```bash
-# Run PLEK2 on test data
-python PLEK2.py -i PLEK2_test.fa -m ve -o test_results/plek2_test
-
-# This will create:
-# - test_results/plek2_test_scores.txt
-# - test_results/plek2_test_noncoding.txt
-# - test_results/plek2_test_stats.txt
-# - Plus intermediate files in test_results/
-```
-
-## Directory Structure
-
-After installation, the directory structure should be:
-
+### Repository Structure
 ```
 plek2/
-├── scripts/
+├── bin/
 │   ├── PLEK2.py
 │   └── functions.py
-└── utils/
-    ├── Coding_Net_kmer6_orf.h5
-    └── Coding_Net_kmer6_orf_Arabidopsis.h5
+├── test/
+│   ├── PLEK2_test.fa
+│   ├── PLEK2_test_lncrna.fa
+│   └── PLEK2_test_mrna.fa
+├── utils/
+│   ├── Coding_Net_kmer6_orf.h5
+│   ├── Coding_Net_kmer6_orf_Arabidopsis.h5
+│   └── README.md
+└── setup.sh
 ```
 
-Or for conda installation:
-
+### Conda Environment Structure
 ```
-$CONDA_PREFIX/
+$CONDA_PREFIX/  (e.g., ~/miniconda3/envs/PLEK2/)
 ├── bin/
-│   └── plek2
-└── share/
-    └── plek2/
-        ├── functions.py
-        └── utils/
-            ├── Coding_Net_kmer6_orf.h5
-            └── Coding_Net_kmer6_orf_Arabidopsis.h5
+│   ├── PLEK2.py
+│   ├── functions.py
+│   ├── python
+│   └── ...
+├── utils/
+│   ├── Coding_Net_kmer6_orf.h5
+│   └── Coding_Net_kmer6_orf_Arabidopsis.h5
+└── lib/
+    └── python3.8/
+        └── site-packages/
+            ├── numpy/
+            ├── pandas/
+            ├── keras/
+            └── ...
 ```
 
 ## Troubleshooting
@@ -257,21 +352,94 @@ $CONDA_PREFIX/
 ### Models not found error
 
 If you get an error about models not being found:
-1. Verify models are in the `utils` directory
-2. Check that the utils directory is one level up from the scripts directory
-3. Ensure models are decompressed (not .bz2 files)
+1. Verify models are in the `utils/` directory (repository) or `$CONDA_PREFIX/utils/` (conda env)
+2. Check that models are decompressed (not .bz2 files)
+3. Verify file names are exactly: `Coding_Net_kmer6_orf.h5` and `Coding_Net_kmer6_orf_Arabidopsis.h5`
+4. Check the path: models should be in `../utils/` relative to where functions.py is located
 
 ### Import errors
 
 If you get import errors:
-1. Check that all dependencies are installed
-2. Verify you're using Python >= 3.8
-3. Try creating a new conda environment
+1. Ensure the PLEK2 conda environment is activated: `conda activate PLEK2`
+2. Verify all dependencies are installed: `pip list | grep -E "numpy|pandas|keras|tensorflow"`
+3. Check Python version: `python --version` (should be 3.8.x)
+
+### Download issues
+
+If model download fails:
+1. Try using curl instead of wget, or vice versa
+2. Download manually from browser: https://sourceforge.net/projects/plek2/files/
+3. Check internet connection and firewall settings
+4. Verify SourceForge is accessible from your network
+
+### Permission errors
+
+If you get permission errors when copying to conda environment:
+1. Ensure you have write permissions to the conda environment
+2. Don't use `sudo` with conda commands
+3. Check conda environment ownership: `ls -ld $CONDA_PREFIX`
+
+## Testing Installation
+
+After installation, test with the provided sample data:
+
+```bash
+# Activate environment
+conda activate PLEK2
+
+# Create output directory
+mkdir -p test_results
+
+# Run test
+python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o test_results/test
+
+# Check outputs
+ls -lh test_results/test_*.txt
+cat test_results/test_stats.txt
+```
+
+Expected output:
+- `test_results/test_scores.txt` - Detailed predictions
+- `test_results/test_noncoding.txt` - Non-coding sequence list  
+- `test_results/test_stats.txt` - Summary statistics
+
+## Updating PLEK2
+
+To update to the latest version:
+
+```bash
+# Navigate to repository
+cd plek2
+
+# Pull latest changes
+git pull origin main
+
+# Reactivate conda environment
+conda activate PLEK2
+
+# Re-copy updated scripts to conda environment
+cp bin/*.py $CONDA_PREFIX/bin/
+
+# Models usually don't change, but if needed:
+# cp utils/*.h5 $CONDA_PREFIX/utils/
+```
+
+## Uninstallation
+
+To remove PLEK2:
+
+```bash
+# Remove conda environment
+conda env remove -n PLEK2
+
+# Remove repository
+rm -rf plek2
+```
 
 ## Support
 
 For issues and questions:
-- GitHub: https://github.com/AHinsu/plek2
+- GitHub Issues: https://github.com/AHinsu/plek2/issues
 - Email: emanlee815@163.com
 
 ## Citation

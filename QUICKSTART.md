@@ -1,29 +1,83 @@
 # PLEK2 Quick Start Guide
 
-## Installation (Quick)
+## Automated Setup (Easiest)
 
 ```bash
 # 1. Clone repository
 git clone https://github.com/AHinsu/plek2.git
 cd plek2
 
-# 2. Install dependencies
-pip install numpy==1.19.2 pandas keras==2.4.3 tensorflow==2.4.1 biopython regex
+# 2. Run setup script
+./setup.sh
+```
 
-# 3. Create utils directory
-mkdir -p utils
+The setup script will:
+- Create conda environment "PLEK2" with all dependencies
+- Download models from SourceForge
+- Copy files to conda environment
 
-# 4. Download and install models
+## Manual Setup (Step by Step)
+
+### 1. Create Conda Environment
+
+```bash
+# Create environment with dependencies
+conda create -n PLEK2 -y python=3.8.5 numpy=1.19.2 pandas biopython
+
+# Activate environment
+conda activate PLEK2
+
+# Install additional packages
+pip install keras==2.4.3 tensorflow==2.4.1 regex
+```
+
+### 2. Clone Repository
+
+```bash
+git clone https://github.com/AHinsu/plek2.git
+cd plek2
+```
+
+### 3. Download Models
+
+```bash
+# Navigate to utils directory
+cd utils
+
+# Download from SourceForge
 wget https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
+
+# Extract and decompress
 tar -xzf PLEK2_model_v3.tar.gz
 bunzip2 PLEK2_model_v3/*.bz2
-mv PLEK2_model_v3/*.h5 utils/
+mv PLEK2_model_v3/*.h5 .
+rm -rf PLEK2_model_v3 PLEK2_model_v3.tar.gz
+
+cd ..
+```
+
+### 4. Copy to Conda Environment
+
+```bash
+# Copy scripts and models
+conda activate PLEK2
+cp bin/*.py $CONDA_PREFIX/bin/
+mkdir -p $CONDA_PREFIX/utils
+cp utils/*.h5 $CONDA_PREFIX/utils/
+chmod +x $CONDA_PREFIX/bin/PLEK2.py
 ```
 
 ## Usage
 
 ```bash
-python PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
+# Activate conda environment
+conda activate PLEK2
+
+# Run from repository
+python bin/PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
+
+# Or from conda environment bin
+python $CONDA_PREFIX/bin/PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
 ```
 
 ### Parameters
@@ -34,14 +88,15 @@ python PLEK2.py -i INPUT.fa -m MODEL -o OUTPUT_PREFIX
 ### Examples
 
 ```bash
-# Basic usage
-python PLEK2.py -i sequences.fa -m ve -o results
+# Test with sample data
+conda activate PLEK2
+python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
 
-# With output directory
-python PLEK2.py -i sequences.fa -m ve -o output/sample1
+# With custom data - vertebrate model
+python bin/PLEK2.py -i my_sequences.fa -m ve -o output/vertebrate_analysis
 
-# Plant model
-python PLEK2.py -i plant_seqs.fa -m pl -o plant_results
+# Plant model with subdirectory output
+python bin/PLEK2.py -i plant_data.fa -m pl -o results/plants/sample1
 ```
 
 ## Output Files

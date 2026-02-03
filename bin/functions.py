@@ -68,7 +68,8 @@ def filter_fasta(fa, output_prefix):
     f4.close()
     f5.close()
 
-    # Nucleotides to upper case ...
+    # Return sequence names for later use
+    return seq_names
 
     file_in = open(output_prefix + "_seq_lines.fasta", 'r').readlines()
 
@@ -419,6 +420,24 @@ def output_results(Y, seq_names, output_prefix):
     3. Stats file: summary statistics
     """
     seq_len = len(Y)
+    
+    # Validate input
+    if seq_len == 0:
+        print("Warning: No sequences to process. Creating empty output files.")
+        # Create empty output files
+        open(output_prefix + '_scores.txt', 'w').write("Sequence_Name\tClassification\tScore\n")
+        open(output_prefix + '_noncoding.txt', 'w').close()
+        with open(output_prefix + '_stats.txt', 'w') as f:
+            f.write("PLEK2 Prediction Statistics\n")
+            f.write("=" * 50 + "\n\n")
+            f.write("Total input sequences: 0\n")
+            f.write("No sequences processed.\n")
+        return [0, 0]
+    
+    # Check if sequence names match predictions
+    if len(seq_names) != seq_len:
+        print(f"Warning: Number of sequence names ({len(seq_names)}) doesn't match predictions ({seq_len})")
+    
     noncoding = 0
     coding = 0
     noncoding_names = []
@@ -432,7 +451,7 @@ def output_results(Y, seq_names, output_prefix):
         else:
             coding = coding + 1
     
-    pred_noncoding_acc = noncoding / seq_len if seq_len > 0 else 0
+    pred_noncoding_acc = noncoding / seq_len
     pred_coding_acc = 1 - pred_noncoding_acc
     
     print('non-coding =', pred_noncoding_acc)
@@ -443,7 +462,11 @@ def output_results(Y, seq_names, output_prefix):
     with open(scores_file, 'w') as f:
         f.write("Sequence_Name\tClassification\tScore\n")
         for i in range(len(Y)):
-            seq_name = seq_names[i] if i < len(seq_names) else f">sequence_{i+1}"
+            if i < len(seq_names):
+                seq_name = seq_names[i]
+            else:
+                seq_name = f">sequence_{i+1}"
+                print(f"Warning: Missing sequence name for index {i}, using generic name")
             classification = "Non-coding" if Y[i] == 0 else "Coding"
             score = 0 if Y[i] == 0 else 1
             f.write(f"{seq_name}\t{classification}\t{score}\n")

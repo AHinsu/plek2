@@ -26,10 +26,17 @@ except ImportError as e:
     print(f"✗ PLEK2 import failed: {e}")
     sys.exit(1)
 
-# Test argument parsing
-sys.argv = ['test', '-i', 'test.fa', '-m', 've', '-o', 'test_output']
+# Test argument parsing with a custom argument list
 try:
-    args = parse_arguments()
+    import argparse
+    parser = argparse.ArgumentParser(description='Test')
+    parser.add_argument('-i', '--input_file', required=True)
+    parser.add_argument('-m', '--model', required=True)
+    parser.add_argument('-o', '--output', required=True)
+    
+    # Parse test arguments without modifying sys.argv
+    args = parser.parse_args(['-i', 'test.fa', '-m', 've', '-o', 'test_output'])
+    
     assert args.input_file == 'test.fa'
     assert args.model == 've'
     assert args.output == 'test_output'
