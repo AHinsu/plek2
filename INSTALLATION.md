@@ -49,20 +49,18 @@ This script will:
 #### Step 1: Create Conda Environment
 
 ```bash
-# Create conda environment named PLEK2 with Python and basic dependencies
-conda create -n PLEK2 -y \
+# Create conda environment named PLEK2 with all dependencies
+conda create -n PLEK2 -y -c conda-forge \
     python=3.8.5 \
     numpy=1.19.2 \
     pandas \
-    biopython
+    biopython \
+    keras=2.4.3 \
+    tensorflow=2.4.1 \
+    regex
 
 # Activate the environment
 conda activate PLEK2
-
-# Install remaining dependencies via pip
-pip install keras==2.4.3
-pip install tensorflow==2.4.1
-pip install regex
 ```
 
 #### Step 2: Clone Repository
@@ -141,8 +139,18 @@ If you prefer to run PLEK2 directly from the cloned repository:
 git clone https://github.com/AHinsu/plek2.git
 cd plek2
 
-# Install dependencies (if not using conda)
-pip install numpy==1.19.2 pandas keras==2.4.3 tensorflow==2.4.1 biopython regex
+# Create conda environment with all dependencies
+conda create -n PLEK2 -y -c conda-forge \
+    python=3.8.5 \
+    numpy=1.19.2 \
+    pandas \
+    biopython \
+    keras=2.4.3 \
+    tensorflow=2.4.1 \
+    regex
+
+# Activate the environment
+conda activate PLEK2
 
 # Download and extract models to utils/ directory
 cd utils
@@ -166,6 +174,9 @@ python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
 - ~2GB disk space for model files
 
 ### Python Dependencies
+
+All dependencies are installed via conda from the conda-forge channel:
+
 - python = 3.8.5
 - numpy = 1.19.2
 - pandas
@@ -173,6 +184,8 @@ python bin/PLEK2.py -i test/PLEK2_test.fa -m ve -o results/test
 - tensorflow = 2.4.1
 - biopython >= 1.3.2
 - regex
+
+**Note:** The installation commands use the `-c conda-forge` flag to ensure all packages are available. This channel provides the most comprehensive package coverage including keras, tensorflow, and regex.
 
 ## Detailed Setup Commands
 
@@ -182,15 +195,19 @@ Complete command sequence to create and set up the conda environment:
 
 ```bash
 # 1. Create conda environment with all dependencies
-conda create -n PLEK2 -y python=3.8.5 numpy=1.19.2 pandas biopython
+conda create -n PLEK2 -y -c conda-forge \
+    python=3.8.5 \
+    numpy=1.19.2 \
+    pandas \
+    biopython \
+    keras=2.4.3 \
+    tensorflow=2.4.1 \
+    regex
 
 # 2. Activate environment
 conda activate PLEK2
 
-# 3. Install pip dependencies
-pip install keras==2.4.3 tensorflow==2.4.1 regex
-
-# 4. Verify installation
+# 3. Verify installation
 python -c "import numpy, pandas, keras, tensorflow, Bio, regex; print('All dependencies installed successfully')"
 ```
 
@@ -361,7 +378,7 @@ If you get an error about models not being found:
 
 If you get import errors:
 1. Ensure the PLEK2 conda environment is activated: `conda activate PLEK2`
-2. Verify all dependencies are installed: `pip list | grep -E "numpy|pandas|keras|tensorflow"`
+2. Verify all dependencies are installed: `conda list | grep -E "numpy|pandas|keras|tensorflow"`
 3. Check Python version: `python --version` (should be 3.8.x)
 
 ### Download issues

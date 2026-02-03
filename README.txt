@@ -38,9 +38,8 @@ Requirements
 + [Python version >= 3.8.5] (http://www.python.org/)
 
 Conda Environment "PLEK2":
-$ conda create -n PLEK2 -y python=3.8.5 numpy=1.19.2 pandas biopython
+$ conda create -n PLEK2 -y -c conda-forge python=3.8.5 numpy=1.19.2 pandas biopython keras=2.4.3 tensorflow=2.4.1 regex
 $ conda activate PLEK2
-$ pip install keras==2.4.3 tensorflow==2.4.1 regex
 
 For manual installation and other methods, see INSTALLATION.md
 --------------------------------------------------

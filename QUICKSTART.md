@@ -21,14 +21,18 @@ The setup script will:
 ### 1. Create Conda Environment
 
 ```bash
-# Create environment with dependencies
-conda create -n PLEK2 -y python=3.8.5 numpy=1.19.2 pandas biopython
+# Create environment with all dependencies via conda
+conda create -n PLEK2 -y -c conda-forge \
+    python=3.8.5 \
+    numpy=1.19.2 \
+    pandas \
+    biopython \
+    keras=2.4.3 \
+    tensorflow=2.4.1 \
+    regex
 
 # Activate environment
 conda activate PLEK2
-
-# Install additional packages
-pip install keras==2.4.3 tensorflow==2.4.1 regex
 ```
 
 ### 2. Clone Repository

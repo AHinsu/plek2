@@ -38,21 +38,15 @@ create_conda_env() {
         fi
     fi
     
-    # Create environment with all dependencies
-    conda create -n PLEK2 -y \
+    # Create environment with all dependencies via conda
+    conda create -n PLEK2 -y -c conda-forge \
         python=3.8.5 \
         numpy=1.19.2 \
         pandas \
-        biopython
-    
-    # Activate environment and install pip packages
-    echo "Installing additional dependencies..."
-    source $(conda info --base)/etc/profile.d/conda.sh
-    conda activate PLEK2
-    
-    pip install keras==2.4.3
-    pip install tensorflow==2.4.1
-    pip install regex
+        biopython \
+        keras=2.4.3 \
+        tensorflow=2.4.1 \
+        regex
     
     echo "✓ Conda environment 'PLEK2' created successfully"
 }
