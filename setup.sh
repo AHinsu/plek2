@@ -72,9 +72,9 @@ download_models() {
     
     # Download model archive
     if command -v wget &> /dev/null; then
-        wget -O PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
+        wget -O PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEKv2_allfiles_240807.tar.gz
     elif command -v curl &> /dev/null; then
-        curl -L -o PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
+        curl -L -o PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEKv2_allfiles_240807.tar.gz
     else
         echo "Error: Neither wget nor curl is available."
         echo "Please download manually from: https://sourceforge.net/projects/plek2/files/"
