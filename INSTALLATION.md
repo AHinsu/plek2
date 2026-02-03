@@ -77,10 +77,10 @@ cd plek2
 cd utils
 
 # Download model files from SourceForge
-wget https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
+wget -O PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEKv2_allfiles_240807.tar.gz
 
 # Or using curl if wget is not available:
-# curl -L -o PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz/download
+# curl -L -o PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEKv2_allfiles_240807.tar.gz
 
 # Extract the archive
 tar -xzf PLEK2_model_v3.tar.gz
@@ -157,7 +157,7 @@ conda activate PLEK2
 
 # Download and extract models to utils/ directory
 cd utils
-wget https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
+wget -O PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEKv2_allfiles_240807.tar.gz
 tar -xzf PLEK2_model_v3.tar.gz
 bunzip2 PLEK2_model_v3/*.bz2
 mv PLEK2_model_v3/*.h5 .
@@ -224,10 +224,10 @@ python -c "import numpy, pandas, keras, tensorflow, Bio, regex; print('All depen
 cd plek2/utils
 
 # Download using wget (Linux/macOS with wget)
-wget https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz
+wget -O PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEKv2_allfiles_240807.tar.gz
 
 # OR download using curl (macOS default)
-curl -L -o PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEK2_model_v3.tar.gz/download
+curl -L -o PLEK2_model_v3.tar.gz https://sourceforge.net/projects/plek2/files/PLEKv2_allfiles_240807.tar.gz
 
 # Extract archive
 tar -xzf PLEK2_model_v3.tar.gz
@@ -434,46 +434,4 @@ Expected output:
 - `test_results/test_noncoding.txt` - Non-coding sequence list  
 - `test_results/test_stats.txt` - Summary statistics
 
-## Updating PLEK2
 
-To update to the latest version:
-
-```bash
-# Navigate to repository
-cd plek2
-
-# Pull latest changes
-git pull origin main
-
-# Reactivate conda environment
-conda activate PLEK2
-
-# Re-copy updated scripts to conda environment
-cp bin/*.py $CONDA_PREFIX/bin/
-
-# Models usually don't change, but if needed:
-# cp utils/*.h5 $CONDA_PREFIX/utils/
-```
-
-## Uninstallation
-
-To remove PLEK2:
-
-```bash
-# Remove conda environment
-conda env remove -n PLEK2
-
-# Remove repository
-rm -rf plek2
-```
-
-## Support
-
-For issues and questions:
-- GitHub Issues: https://github.com/AHinsu/plek2/issues
-- Email: emanlee815@163.com
-
-## Citation
-
-If you use PLEK2 in your research, please cite:
-[Add citation information here]
