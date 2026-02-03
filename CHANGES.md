@@ -77,18 +77,6 @@ Creates:
 - Uses `os.path` for cross-platform compatibility
 - Better integration with conda and system installations
 
-**Implementation in `functions.py`:**
-```python
-def prediction(dat, md):
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    utils_dir = os.path.join(script_dir, '..', 'utils')
-    
-    if md == 've':
-        model_path = os.path.join(utils_dir, 'Coding_Net_kmer6_orf.h5')
-    else:
-        model_path = os.path.join(utils_dir, 'Coding_Net_kmer6_orf_Arabidopsis.h5')
-```
-
 **Expected Directory Structure:**
 ```
 plek2/
@@ -111,22 +99,10 @@ plek2/
    - Troubleshooting section
    - Usage examples
 
-2. **`DIRECTORY_STRUCTURE.md`** - Directory organization guide
-   - Four directory structure options
-   - Visual tree representations
-   - Setup instructions for each option
-   - Testing and verification steps
-
-3. **`QUICKSTART.md`** - Quick reference
+2. **`README.md`** - Quick reference
    - Condensed installation steps
    - Basic usage examples
    - Common issues and solutions
-
-4. **Updated `README.txt`**
-   - Added output prefix parameter
-   - Documented new output files
-   - Updated usage examples
-   - Added reference to detailed documentation
 
 ### 6. Git Configuration ✅
 
