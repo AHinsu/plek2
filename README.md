@@ -1,3 +1,46 @@
+# This repository contains modified code from the original sourcecode hosted at https://sourceforge.net/projects/plek2/files/
+The purpose of this repository is to make working with PLEKv2 easier and more user-friendly. 
+For any queries related to working of the tool and models, please contact the original authors given below.
+
+Haotian Zhou, Master
+School of Computer Science and Engineering,
+Xi'an University of Technology,
+5 South Jinhua Road,
+Xi'an, Shaanxi 710048, P.R China
+
+
+Aimin Li, PhD
+School of Computer Science and Engineering,
+Xi'an University of Technology,
+5 South Jinhua Road,
+Xi'an, Shaanxi 710048, P.R China
+
+
+liaiminmail AT gmail.com
+
+emanlee815 AT 163.com
+
+
+Please see and cite the original publication at https://pmc.ncbi.nlm.nih.gov/articles/PMC11295476/
+===========================================================
+PLEK2: a novel method for predicting lncRNA and mRNA based on sequence intrinsic features and Coding-Net model (Upgraded version of PLEK)
+===========================================================
+
+
+LncRNA participates in many important regulatory activities of organisms. Its biological structure is similar to messenger RNA (mRNA), in order to distinguish between lncRNA and mRNA (messenger RNA) transcripts more quickly and accurately, we upgraded the alignment-free PLEK to PLEK2.
+
+Requirements
+------------
++ [Linux]
++ [Python version > = 3.8.5] (http://www.python.org/)
++ regex package
++ keras==2.4.3 package
++ pandas package
++ tensorflow==2.4.1 package
++ bio version >= 1.3.2 package
++ numpy package
+--------------------------------------------------
+
 # PLEK2 Quick Start Guide
 
 ## Automated Setup (Easiest)
@@ -152,25 +195,4 @@ Sequence_Name                  Classification  Score
 ...
 ```
 
-## Tips
-
-- Intermediate files are kept for analysis - remove manually if not needed
-- Output directory is created automatically if it doesn't exist
-- Sequences must be >= 200 bp (filtered automatically)
-- Use absolute or relative paths for input/output files
-
-## Common Issues
-
-**Models not found:**
-- Ensure models are in `utils/` directory
-- Check models are decompressed (.h5 not .h5.bz2)
-
-**Import errors:**
-- Install all dependencies with pip
-- Use Python >= 3.8
-
-**File not found:**
-- Check input file path
-- Ensure read permissions
-
-For detailed help, see INSTALLATION.md and DIRECTORY_STRUCTURE.md
+For detailed help, see INSTALLATION.md
